@@ -1,0 +1,1 @@
+include ":spark-netty-client", ":spark-netty-core", ":spark-netty-http-server", ":spark-netty-server", ":spark-netty-web"
