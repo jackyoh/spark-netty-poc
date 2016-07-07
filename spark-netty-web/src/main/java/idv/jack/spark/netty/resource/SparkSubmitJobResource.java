@@ -14,6 +14,6 @@ public class SparkSubmitJobResource {
 	@Path("job")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String submitJob(){
-		return "aaaaaaaa";
+		return "aaaaaaaabbbbb";
 	}
 }
