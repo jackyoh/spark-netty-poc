@@ -1,5 +1,7 @@
 package idv.jack.spark.launcher;
 
+import idv.jack.sparknetty.conf.SparkNettyConf;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,6 +10,11 @@ import java.io.InputStreamReader;
 import org.apache.spark.launcher.SparkLauncher;
 
 public abstract class AbstractSparkLauncher {
+	protected SparkNettyConf sparkNettyConf;
+	
+	public AbstractSparkLauncher(SparkNettyConf sparkNettyConf){
+		this.sparkNettyConf = sparkNettyConf;
+	}
 	
 	public abstract SparkLauncher createSparkLauncher();
 	

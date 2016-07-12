@@ -4,11 +4,11 @@ public class BootStrapperSparkDriverMain {
 	
 	public static void main(String args[]) throws Exception{
 		
-		WordCountSparkDriver driver = (WordCountSparkDriver)Thread.currentThread()
+		/*WordCountSparkDriver driver = (WordCountSparkDriver)Thread.currentThread()
 				.getContextClassLoader()
 				.loadClass(WordCountSparkDriver.class.getName())
-				.newInstance();
-		
+				.newInstance();*/
+		AbstractSparkDriver driver = new WordCountSparkDriver(args[0].split(","));
 		driver.run();
 	}
 

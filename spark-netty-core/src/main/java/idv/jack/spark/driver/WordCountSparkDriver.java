@@ -14,16 +14,16 @@ import scala.Tuple2;
 
 public class WordCountSparkDriver extends AbstractSparkDriver{
 	
-	public WordCountSparkDriver(){
-		
+	public WordCountSparkDriver(String []sparkDriverArgs){
+		super(sparkDriverArgs);
 	}
 	
 	
 	public String sparkDriverLogic() throws Exception{
 		
 		JavaSparkContext sc = new JavaSparkContext();
-		//JavaRDD<String> textFile = sc.textFile(this.sparkAppArgs[0]);
-		JavaRDD<String> textFile = sc.textFile("hdfs://apache-server-a1:9000/file1.txt");
+		JavaRDD<String> textFile = sc.textFile(this.sparkDriverArgs[0]);
+		//JavaRDD<String> textFile = sc.textFile("hdfs://apache-server-a1:9000/file1.txt");
 		
 		JavaRDD<String> words = textFile.flatMap(new FlatMapFunction<String, String>() {
 		  public Iterable<String> call(String s) { return Arrays.asList(s.split(" ")); }
