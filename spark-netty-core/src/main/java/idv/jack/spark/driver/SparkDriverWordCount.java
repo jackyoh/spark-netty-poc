@@ -17,6 +17,8 @@ import scala.Tuple2;
 public class SparkDriverWordCount {
 
 	public static void main(String args[]) throws Exception{
+		System.out.println("SOURCE FILE PATH:" + args[0]);
+		
 		JavaSparkContext sc = new JavaSparkContext();
 		JavaRDD<String> textFile = sc.textFile("hdfs://apache-server-a1:9000/file1.txt");
 		
@@ -36,12 +38,12 @@ public class SparkDriverWordCount {
 		
 		String resultValue = "";
 		for(Tuple2<String, Integer> result : list){
-			//System.out.println("result:" + result._1 + "," + result._2);
 			resultValue = resultValue + result._1 + "," + result._2;
 		}
 
 		//counts.saveAsTextFile("hdfs://apache-server-a1:9000/result");
 		
+		//result assign to netty server
 		String host = "192.168.1.16";
 		int port = 1234;
 		new Client(host, port).start(resultValue);

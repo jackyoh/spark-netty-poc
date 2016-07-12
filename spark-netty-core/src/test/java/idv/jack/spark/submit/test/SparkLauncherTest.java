@@ -24,7 +24,9 @@ public class SparkLauncherTest {
 		Process spark = new SparkLauncher()
 			        .setSparkHome(SPARK_HOME)
 			        .setAppResource("/home/user1/spark-netty-poc/spark-netty-core/build/libs/spark-netty-core.jar")
-			        .setMainClass("idv.jack.spark.driver.SparkDriverWordCount").setMaster("yarn-cluster").launch();
+			        .setMainClass("idv.jack.spark.driver.SparkDriverWordCount")
+			        .addAppArgs("hdfs://apache-server-a1:9000/file2.txt")
+			        .setMaster("yarn-cluster").launch();
 		
 		InputStreamReaderRunnable inputStreamReaderRunnable = new InputStreamReaderRunnable(spark.getInputStream(), "input");
 		Thread inputThread = new Thread(inputStreamReaderRunnable, "LogStreamReader input");
