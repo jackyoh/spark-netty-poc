@@ -10,11 +10,11 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 
 import java.net.InetSocketAddress;
 
-public class Client {
+public class NettyClient {
 	private String host;
 	private int port;
 
-	public Client(String host, int port){
+	public NettyClient(String host, int port){
 		this.host = host;
 		this.port = port;
 	}

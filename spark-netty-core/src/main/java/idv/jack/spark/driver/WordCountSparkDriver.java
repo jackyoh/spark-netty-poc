@@ -1,6 +1,6 @@
 package idv.jack.spark.driver;
 
-import idv.jack.netty.client.Client;
+import idv.jack.netty.client.NettyClient;
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,12 +14,12 @@ import org.apache.spark.api.java.function.PairFunction;
 
 import scala.Tuple2;
 
-public class SparkDriverWordCount {
-
+public class WordCountSparkDriver{
+	
 	public static void main(String args[]) throws Exception{
-		System.out.println("SOURCE FILE PATH:" + args[0]);
 		
 		JavaSparkContext sc = new JavaSparkContext();
+		//JavaRDD<String> textFile = sc.textFile(this.sparkAppArgs[0]);
 		JavaRDD<String> textFile = sc.textFile("hdfs://apache-server-a1:9000/file1.txt");
 		
 		JavaRDD<String> words = textFile.flatMap(new FlatMapFunction<String, String>() {
@@ -40,13 +40,10 @@ public class SparkDriverWordCount {
 		for(Tuple2<String, Integer> result : list){
 			resultValue = resultValue + result._1 + "," + result._2;
 		}
-
-		//counts.saveAsTextFile("hdfs://apache-server-a1:9000/result");
 		
-		//result assign to netty server
 		String host = "192.168.1.16";
-		int port = 1234;
-		new Client(host, port).start(resultValue);
+		int port = Integer.parseInt("1234");
+		new NettyClient(host, port).start(resultValue);
+		
 	}
-	
 }
