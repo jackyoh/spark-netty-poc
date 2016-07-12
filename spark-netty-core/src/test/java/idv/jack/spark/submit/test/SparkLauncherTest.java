@@ -16,11 +16,16 @@ public class SparkLauncherTest {
 		String SPARK_HOME = "/opt/spark-1.6.0-bin-hadoop2.6";
 		
 		
-		Process spark = new SparkLauncher()
+		/*Process spark = new SparkLauncher()
 	                          .setSparkHome(SPARK_HOME)
 	                          .setAppResource(SPARK_HOME + "/lib/spark-examples-1.6.0-hadoop2.6.0.jar")
 	                          .setMainClass("org.apache.spark.examples.SparkPi").setMaster("yarn-cluster").launch();
-
+		*/
+		Process spark = new SparkLauncher()
+			        .setSparkHome(SPARK_HOME)
+			        .setAppResource("/home/user1/spark-netty-poc/spark-netty-core/build/libs/spark-netty-core.jar")
+			        .setMainClass("idv.jack.spark.driver.SparkDriverWordCount").setMaster("yarn-cluster").launch();
+		
 		InputStreamReaderRunnable inputStreamReaderRunnable = new InputStreamReaderRunnable(spark.getInputStream(), "input");
 		Thread inputThread = new Thread(inputStreamReaderRunnable, "LogStreamReader input");
 		inputThread.start();
