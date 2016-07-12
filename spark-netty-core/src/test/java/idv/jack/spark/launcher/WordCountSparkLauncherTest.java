@@ -1,5 +1,7 @@
 package idv.jack.spark.launcher;
 
+import java.util.List;
+
 import idv.jack.sparknetty.conf.SparkNettyConf;
 
 import org.junit.Test;
@@ -13,7 +15,11 @@ public class WordCountSparkLauncherTest {
 		sparkNettyConf.setNettyPort("1234");
 		
 		AbstractSparkLauncher launcher = new WordCountSparkLauncherImpl(sparkNettyConf);
-		launcher.launch();
+		List<String> result = launcher.launch();
+		//System.out.println("FINISH:" + result);
+		for(String r : result){
+			System.out.println(r);
+		}
 	}
 
 }

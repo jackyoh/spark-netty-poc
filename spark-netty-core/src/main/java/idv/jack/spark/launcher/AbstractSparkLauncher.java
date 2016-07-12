@@ -1,15 +1,21 @@
 package idv.jack.spark.launcher;
 
+import idv.jack.netty.server.EchoServerHandler;
+import idv.jack.netty.server.NettyServer;
 import idv.jack.sparknetty.conf.SparkNettyConf;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.List;
 
 import org.apache.spark.launcher.SparkLauncher;
 
 public abstract class AbstractSparkLauncher {
+	private NettyServer nettyServer;
+	private EchoServerHandler echoServerHandler;
+	
 	protected SparkNettyConf sparkNettyConf;
 	
 	public AbstractSparkLauncher(SparkNettyConf sparkNettyConf){
@@ -18,7 +24,7 @@ public abstract class AbstractSparkLauncher {
 	
 	public abstract SparkLauncher createSparkLauncher();
 	
-	public void launch() throws Exception{
+	public List<String> launch() throws Exception{
 		this.startNettyServer();
 		
 		SparkLauncher sparkLauncher = this.createSparkLauncher();
@@ -37,10 +43,24 @@ public abstract class AbstractSparkLauncher {
 		System.out.println("Finished! Exit code:" + exitCode);
 		
 		this.stopNettyServer();
+		
+		return this.echoServerHandler.getResultList();
 	}
 	
 	protected void startNettyServer(){
-		//TODO
+		try{
+			
+			Integer port = Integer.parseInt(this.sparkNettyConf.getNettyPort());
+			this.nettyServer = new NettyServer(port);
+			this.echoServerHandler = new EchoServerHandler();	
+			//this.nettyServer.start(this.echoServerHandler);
+			Thread serverThread = new Thread(new NettyServerThread(nettyServer, echoServerHandler));
+			serverThread.start();
+			
+			
+		}catch(Exception e){
+			throw new RuntimeException(e);
+		}
 	}
 	
 	protected void stopNettyServer(){
@@ -73,4 +93,21 @@ class InputStreamReaderRunnable implements Runnable {
         }
     }
 }
-
+class NettyServerThread implements Runnable {
+	private NettyServer nettyServer;
+	private EchoServerHandler echoServerHandler;
+	
+	public NettyServerThread(NettyServer nettyServer, EchoServerHandler echoServerHandler){
+		this.nettyServer = nettyServer;
+		this.echoServerHandler = echoServerHandler;
+	}
+	
+	@Override
+	public void run() {
+		try{
+			this.nettyServer.start(this.echoServerHandler);
+		}catch(Exception e){
+			throw new RuntimeException(e);
+		}
+	}
+}
