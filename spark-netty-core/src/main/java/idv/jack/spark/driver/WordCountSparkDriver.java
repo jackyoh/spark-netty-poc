@@ -1,7 +1,5 @@
 package idv.jack.spark.driver;
 
-import idv.jack.netty.client.NettyClient;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -14,9 +12,14 @@ import org.apache.spark.api.java.function.PairFunction;
 
 import scala.Tuple2;
 
-public class WordCountSparkDriver{
+public class WordCountSparkDriver extends AbstractSparkDriver{
 	
-	public static void main(String args[]) throws Exception{
+	public WordCountSparkDriver(){
+		
+	}
+	
+	
+	public String sparkDriverLogic() throws Exception{
 		
 		JavaSparkContext sc = new JavaSparkContext();
 		//JavaRDD<String> textFile = sc.textFile(this.sparkAppArgs[0]);
@@ -40,10 +43,6 @@ public class WordCountSparkDriver{
 		for(Tuple2<String, Integer> result : list){
 			resultValue = resultValue + result._1 + "," + result._2;
 		}
-		
-		String host = "192.168.1.16";
-		int port = Integer.parseInt("1234");
-		new NettyClient(host, port).start(resultValue);
-		
+		return resultValue;
 	}
 }
