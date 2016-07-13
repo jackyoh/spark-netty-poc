@@ -17,7 +17,7 @@ public class WordCountSparkLauncherImpl extends AbstractSparkLauncher {
 	public SparkLauncher createSparkLauncher() {
 		String SPARK_HOME = "/opt/spark-1.6.0-bin-hadoop2.6";
 		
-		String hostName = this.sparkNettyConf.getNettyHostName();
+		String hostName = this.sparkNettyConf.getNettyHostIP();
 		String portNumber = this.sparkNettyConf.getNettyPort();
 		
 		String appArgs = "hdfs://apache-server-a1:9000/file1.txt," + hostName + "," + portNumber;

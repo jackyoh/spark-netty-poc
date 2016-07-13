@@ -2,17 +2,24 @@ package idv.jack.spark.launcher;
 
 import idv.jack.netty.server.EchoServerHandler;
 import idv.jack.netty.server.NettyServer;
+import idv.jack.sparknetty.common.SparkNettyUtil;
 import idv.jack.sparknetty.conf.SparkNettyConf;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.spark.launcher.SparkLauncher;
 
 public abstract class AbstractSparkLauncher {
+	private static final Logger LOG = LoggerFactory.getLogger(AbstractSparkLauncher.class);
+	
 	private NettyServer nettyServer;
 	private EchoServerHandler echoServerHandler;
 	
@@ -25,6 +32,7 @@ public abstract class AbstractSparkLauncher {
 	public abstract SparkLauncher createSparkLauncher();
 	
 	public List<String> launch() throws Exception{
+		LOG.info("SparkLaunch start...");
 		this.startNettyServer();
 		
 		SparkLauncher sparkLauncher = this.createSparkLauncher();
@@ -38,22 +46,26 @@ public abstract class AbstractSparkLauncher {
 		Thread errorThread = new Thread(errorStreamReaderRunnable, "LogStreamReader error");
 		errorThread.start();
 	
-		System.out.println("Waiting for finish...");
+		LOG.info("Waiting for finish...");
 		int exitCode = spark.waitFor();
-		System.out.println("Finished! Exit code:" + exitCode);
+		LOG.info("Finished! Exit code:" + exitCode);
 		
-		this.stopNettyServer();
+		
 		
 		return this.echoServerHandler.getResultList();
 	}
 	
 	protected void startNettyServer(){
 		try{
+			this.checkNettyHostIP();
 			
-			Integer port = Integer.parseInt(this.sparkNettyConf.getNettyPort());
+			Integer port = this.getNettyPortNumber();
+			
+			LOG.info("Netty Port Number is:" + port);
+			
 			this.nettyServer = new NettyServer(port);
 			this.echoServerHandler = new EchoServerHandler();	
-			//this.nettyServer.start(this.echoServerHandler);
+
 			Thread serverThread = new Thread(new NettyServerThread(nettyServer, echoServerHandler));
 			serverThread.start();
 			
@@ -63,13 +75,39 @@ public abstract class AbstractSparkLauncher {
 		}
 	}
 	
-	protected void stopNettyServer(){
-		//TODO
+	private void checkNettyHostIP(){
+		try{
+			if(this.sparkNettyConf.getNettyHostIP() == null){
+				String ip = InetAddress.getLocalHost().getHostAddress();
+				this.sparkNettyConf.setNettyHostIP(ip);
+			}
+		}catch(Exception e){
+			throw new RuntimeException(e);
+		}
+	}
+	
+	private int getNettyPortNumber(){
+		Integer port = this.randomPortNumber();;
+		if(this.sparkNettyConf.getNettyPort() != null && 
+				!SparkNettyUtil.portNumberExists(this.sparkNettyConf.getNettyHostIP(), Integer.parseInt(this.sparkNettyConf.getNettyPort()))){
+			port = Integer.parseInt(this.sparkNettyConf.getNettyPort());
+		}
+		this.sparkNettyConf.setNettyPort(String.valueOf(port));
+		return port;
+	}
+	
+	private int randomPortNumber(){
+		try{
+			ServerSocket tempServer = new ServerSocket(0);
+	        return tempServer.getLocalPort();
+		}catch(Exception e){
+			throw new RuntimeException(e);
+		}
 	}
 }
 
 class InputStreamReaderRunnable implements Runnable {
-
+	private static final Logger LOG = LoggerFactory.getLogger(InputStreamReaderRunnable.class);
     private BufferedReader reader;
 
     private String name;
@@ -80,11 +118,11 @@ class InputStreamReaderRunnable implements Runnable {
     }
 
     public void run() {
-        System.out.println("InputStream " + name + ":");
+        LOG.info("InputStream " + name + ":");
         try {
             String line = reader.readLine();
             while (line != null) {
-                System.out.println(line);
+            	LOG.info(line);
                 line = reader.readLine();
             }
             reader.close();

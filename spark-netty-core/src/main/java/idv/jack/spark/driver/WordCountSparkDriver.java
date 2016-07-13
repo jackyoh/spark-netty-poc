@@ -41,7 +41,7 @@ public class WordCountSparkDriver extends AbstractSparkDriver{
 		
 		String resultValue = "";
 		for(Tuple2<String, Integer> result : list){
-			resultValue = resultValue + result._1 + "," + result._2;
+			resultValue = resultValue + result._1 + "," + result._2 + "  ";
 		}
 		return resultValue;
 	}

@@ -2,14 +2,16 @@ package idv.jack.sparknetty.conf;
 
 public class SparkNettyConf {
 	
-	private String nettyHostName;
+	private String nettyHostIP;
 	private String nettyPort;
 	
-	public String getNettyHostName() {
-		return nettyHostName;
+	
+	
+	public String getNettyHostIP() {
+		return nettyHostIP;
 	}
-	public void setNettyHostName(String nettyHostName) {
-		this.nettyHostName = nettyHostName;
+	public void setNettyHostIP(String nettyHostIP) {
+		this.nettyHostIP = nettyHostIP;
 	}
 	public String getNettyPort() {
 		return nettyPort;
