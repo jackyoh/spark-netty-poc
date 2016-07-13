@@ -2,6 +2,7 @@ package idv.jack.sparknetty.common;
 
 import java.net.InetAddress;
 import java.net.ServerSocket;
+import java.util.Random;
 
 import org.junit.Test;
 
@@ -19,11 +20,20 @@ public class SparkNettyUtilTest {
 	}
 
 	@Test
-	public void testRandomPort() throws Exception{
+	public void testRandomPort1() throws Exception{
 		ServerSocket tempServer = new ServerSocket(0);
   
         int port = tempServer.getLocalPort();
 		System.out.println(port);
 	}
 
+	@Test
+	public void testRandomPort2() throws Exception{
+		
+		for(int i = 1 ; i <= 20 ; i++){
+			System.out.println(SparkNettyUtil.randomPortNumber());
+		}
+		
+	}
+	
 }

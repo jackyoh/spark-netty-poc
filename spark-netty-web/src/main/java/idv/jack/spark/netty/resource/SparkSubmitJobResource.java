@@ -1,5 +1,7 @@
 package idv.jack.spark.netty.resource;
 
+import idv.jack.sparknetty.facade.submit.WordCountSubmitFacade;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -14,6 +16,8 @@ public class SparkSubmitJobResource {
 	@Path("job")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String submitJob(){
-		return "aaaaaaaabbbbb";
+		WordCountSubmitFacade wordCountSubmit = new WordCountSubmitFacade();
+		
+		return wordCountSubmit.submit();
 	}
 }

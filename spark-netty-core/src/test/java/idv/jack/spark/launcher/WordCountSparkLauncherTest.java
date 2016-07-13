@@ -11,6 +11,8 @@ public class WordCountSparkLauncherTest {
 	@Test
 	public void testSubmit() throws Exception{
 		SparkNettyConf sparkNettyConf = new SparkNettyConf();
+		//sparkNettyConf.setNettyHostIP("192.168.1.16");
+	//	sparkNettyConf.setNettyPort("1234");
 		
 		AbstractSparkLauncher launcher = new WordCountSparkLauncherImpl(sparkNettyConf);
 		List<String> result = launcher.launch();
