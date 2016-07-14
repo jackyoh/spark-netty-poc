@@ -48,8 +48,8 @@ public abstract class AbstractSparkLauncher {
 		int exitCode = spark.waitFor();
 		LOG.info("Finished! Exit code:" + exitCode);
 		
-		this.nettyServer.getChannel().close();
-		this.nettyServer.getGroup().shutdownGracefully();		
+		this.nettyServer.close();
+		LOG.info("Shutdown Netty Server port:" + this.sparkNettyConf.getNettyPort());
 		return this.echoServerHandler.getResultList();
 	}
 	

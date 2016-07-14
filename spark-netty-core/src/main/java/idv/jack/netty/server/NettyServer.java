@@ -55,16 +55,11 @@ public class NettyServer {
 			
 		};
 	}
-
-	public Channel getChannel() {
-		return channel;
-	}
-
-	public NioEventLoopGroup getGroup() {
-		return group;
-	}
 	
-	
+	public void close(){
+		this.channel.close();
+		this.group.shutdownGracefully();
+	}	
 }
 
 class ServerChannelInitializer extends ChannelInitializer<SocketChannel> {
