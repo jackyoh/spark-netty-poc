@@ -50,8 +50,6 @@ public abstract class AbstractSparkLauncher {
 		int exitCode = spark.waitFor();
 		LOG.info("Finished! Exit code:" + exitCode);
 		
-	
-		
 		return this.echoServerHandler.getResultList();
 	}
 	
@@ -68,7 +66,7 @@ public abstract class AbstractSparkLauncher {
 
 			Thread serverThread = new Thread(new NettyServerThread(nettyServer, echoServerHandler));
 			serverThread.start();
-			
+
 		}catch(Exception e){
 			throw new RuntimeException(e);
 		}
@@ -142,7 +140,6 @@ class NettyServerThread implements Runnable {
 	public void run() {
 		try{
 			this.nettyServer.start(this.echoServerHandler);
-			this.wait();
 		}catch(Exception e){
 			throw new RuntimeException(e);
 		}
